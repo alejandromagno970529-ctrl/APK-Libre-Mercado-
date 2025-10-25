@@ -1,0 +1,31 @@
+name: libre_mercado_final__app
+description: "Libre Mercado - Compra y vende de forma libre"
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  supabase_flutter: ^2.1.2
+  provider: ^6.1.1
+  geolocator: ^11.0.1
+  geocoding: ^2.1.1
+  permission_handler: ^11.0.1
+  image_picker: ^1.0.4
+  logging: ^1.3.0
+  # ✅ AGREGAR: Para manejo de archivos
+  path_provider: ^2.1.1
+  mime: ^1.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
