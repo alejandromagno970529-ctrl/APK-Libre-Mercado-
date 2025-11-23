@@ -1,0 +1,76 @@
+name: libre_mercado_final__app
+description: "Aplicación de mercado libre hiperlocal para Cuba"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # UI y Material Design
+  cupertino_icons: ^1.0.2
+  provider: ^6.1.1
+  badges: ^3.1.1
+  shimmer: ^3.0.0
+  dotted_border: ^3.1.0
+  pull_to_refresh: ^2.0.0
+  carousel_slider: ^5.1.1
+  flutter_staggered_grid_view: ^0.7.0
+  
+  # Backend y Base de Datos
+  supabase_flutter: ^2.10.3
+  supabase: ^2.10.0
+  
+  # Gestión de Imágenes
+  image_picker: ^1.0.4
+  image_cropper: ^11.0.0
+  cached_network_image: ^3.3.0
+  photo_view: ^0.15.0
+  
+  # Ubicación y Mapas
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  flutter_map: ^6.1.0
+  latlong2: 0.9.1
+  
+  # Utilidades
+  http: ^1.2.2
+  permission_handler: ^12.0.1
+  intl: ^0.20.2
+  uuid: ^4.5.2
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.2
+  crypto: ^3.0.7
+  connectivity_plus: ^7.0.0
+  path_provider: ^2.1.1
+  file_picker: ^10.3.3
+  
+  # ✅ AUDIO CORREGIDO - Paquetes null-safe
+  open_file: ^3.3.1
+  just_audio: ^0.9.35
+  audio_session: ^0.1.22
+  path: ^1.8.3
+  flutter_sound: ^9.2.13  # ✅ Reemplaza audio_recorder
+  
+  # Localizaciones
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.7
+  mockito: ^5.4.4
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
