@@ -54,8 +54,7 @@ void main() async {
 
 Future<void> initializeSupabase() async {
   try {
-    const supabaseUrl = 'https://lgbwswlauddlwwrsjest.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnYndzd2xhdWRkbHd3cnNqZXN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjI4NTUsImV4cCI6MjA3NjYzODg1NX0.VneAE4Ke9Udq6og75WVFwlLnYcJCfd9J-MTXX4rDk8s';
+    
     
     await Supabase.initialize(
       url: supabaseUrl,
@@ -686,4 +685,5 @@ class AppStateManager {
    - Current User Store Name: ${authProvider.currentUser?.storeName ?? 'N/A'}
 ''');
   }
+
 }
