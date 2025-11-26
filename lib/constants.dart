@@ -4,10 +4,7 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   
   // ✅ SUPABASE CONFIGURATION - CON TUS DATOS REALES
-  static const String supabaseUrl = 'https://lgbwswlauddlwwrsjest.supabase.co';
-  static const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnYndzd2xhdWRkbHd3cnNqZXN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjI4NTUsImV4cCI6MjA3NjYzODg1NX0.VneAE4Ke9Udq6og75WVFwlLnYcJCfd9J-MTXX4rDk8s';
-  
-  // ✅ APP SETTINGS
+  static const String supabaseUrl = '
   static const int productsPerPage = 20;
   static const double defaultMapZoom = 15.0;
   static const int chatMessageLimit = 100;
@@ -288,4 +285,5 @@ class AppDimensions {
   static const double productImageSize = 120.0;
   static const double storyImageSize = 72.0;
   static const double profileImageSize = 80.0;
+
 }
