@@ -1,0 +1,244 @@
+// lib/models/message_model.dart - VERSIÓN COMPLETA CORREGIDA
+import 'dart:convert';
+import 'dart:math';
+import 'package:equatable/equatable.dart';
+
+enum MessageType {
+  text,
+  image,
+  file,
+  agreement,
+  system
+}
+
+class Message extends Equatable {
+  final String id;
+  final String chatId;
+  final String? fromId;
+  final String text;
+  final MessageType type;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final bool read;
+  final bool delivered;
+  final DateTime? readAt;
+  final DateTime? deliveredAt;
+  final bool isSystem;
+  final String? tempId;
+  final bool isUploading;
+
+  const Message({
+    required this.id,
+    required this.chatId,
+    this.fromId,
+    required this.text,
+    this.type = MessageType.text,
+    this.metadata = const {},
+    required this.createdAt,
+    this.read = false,
+    this.delivered = false,
+    this.readAt,
+    this.deliveredAt,
+    this.isSystem = false,
+    this.tempId,
+    this.isUploading = false,
+  });
+
+  // ✅ MÉTODO ESTÁTICO CORREGIDO: SIN parámetros
+  static String generateTempId([String? fromId]) {
+    final random = Random();
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    return 'temp_${List.generate(12, (index) => chars[random.nextInt(chars.length)]).join()}';
+  }
+
+  // ✅ GETTER: Saber si es mensaje temporal
+  bool get isTemporary => tempId != null || id.startsWith('temp_');
+
+  // ✅ FACTORY CONSTRUCTOR
+  factory Message.fromMap(Map<String, dynamic> map) {
+    DateTime parseDate(dynamic date) {
+      try {
+        if (date == null) return DateTime.now();
+        if (date is String) return DateTime.parse(date);
+        if (date is DateTime) return date;
+        if (date is int) return DateTime.fromMillisecondsSinceEpoch(date);
+        if (date is double) return DateTime.fromMillisecondsSinceEpoch(date.toInt());
+        return DateTime.now();
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+
+    MessageType parseMessageType(String? typeString) {
+      try {
+        if (typeString == null || typeString.isEmpty) return MessageType.text;
+        return MessageType.values.firstWhere(
+          (e) => e.name.toLowerCase() == typeString.toLowerCase(),
+          orElse: () => MessageType.text,
+        );
+      } catch (e) {
+        return MessageType.text;
+      }
+    }
+
+    Map<String, dynamic> parseMetadata(dynamic metadata) {
+      try {
+        if (metadata == null) return {};
+        if (metadata is String) {
+          if (metadata.isEmpty) return {};
+          return json.decode(metadata) as Map<String, dynamic>;
+        } else if (metadata is Map) {
+          return Map<String, dynamic>.from(metadata);
+        }
+        return {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    bool parseBool(dynamic value) {
+      if (value == null) return false;
+      if (value is bool) return value;
+      if (value is String) return value.toLowerCase() == 'true';
+      if (value is int) return value == 1;
+      return false;
+    }
+
+    return Message(
+      id: map['id']?.toString() ?? '',
+      chatId: map['chat_id']?.toString() ?? '',
+      fromId: map['from_id']?.toString(),
+      text: map['text']?.toString() ?? '',
+      type: parseMessageType(map['type']?.toString()),
+      metadata: parseMetadata(map['metadata']),
+      createdAt: parseDate(map['created_at']),
+      read: parseBool(map['read']),
+      delivered: parseBool(map['delivered']),
+      readAt: map['read_at'] != null ? parseDate(map['read_at']) : null,
+      deliveredAt: map['delivered_at'] != null ? parseDate(map['delivered_at']) : null,
+      isSystem: parseBool(map['is_system']),
+      tempId: map['temp_id']?.toString(),
+      isUploading: parseBool(map['is_uploading']),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'chat_id': chatId,
+      'from_id': fromId,
+      'text': text,
+      'type': type.name,
+      'metadata': json.encode(metadata),
+      'created_at': createdAt.toIso8601String(),
+      'read': read,
+      'delivered': delivered,
+      'read_at': readAt?.toIso8601String(),
+      'delivered_at': deliveredAt?.toIso8601String(),
+      'is_system': isSystem,
+      'temp_id': tempId,
+      'is_uploading': isUploading,
+    };
+  }
+
+  Message copyWith({
+    String? id,
+    String? chatId,
+    String? fromId,
+    String? text,
+    MessageType? type,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    bool? read,
+    bool? delivered,
+    DateTime? readAt,
+    DateTime? deliveredAt,
+    bool? isSystem,
+    String? tempId,
+    bool? isUploading,
+  }) {
+    return Message(
+      id: id ?? this.id,
+      chatId: chatId ?? this.chatId,
+      fromId: fromId ?? this.fromId,
+      text: text ?? this.text,
+      type: type ?? this.type,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      read: read ?? this.read,
+      delivered: delivered ?? this.delivered,
+      readAt: readAt ?? this.readAt,
+      deliveredAt: deliveredAt ?? this.deliveredAt,
+      isSystem: isSystem ?? this.isSystem,
+      tempId: tempId ?? this.tempId,
+      isUploading: isUploading ?? this.isUploading,
+    );
+  }
+
+  // ✅ FACTORY PARA MENSAJE TEMPORAL - LLAMADA CORRECTA
+  factory Message.temporary({
+    required String chatId,
+    required String fromId,
+    required String text,
+    MessageType type = MessageType.text,
+    Map<String, dynamic> metadata = const {},
+    bool isUploading = false,
+  }) {
+    // ✅ LLAMADA CORRECTA: Sin parámetros
+    final tempId = Message.generateTempId();
+    return Message(
+      id: tempId,
+      chatId: chatId,
+      fromId: fromId,
+      text: text,
+      type: type,
+      metadata: metadata,
+      createdAt: DateTime.now(),
+      read: false,
+      delivered: false,
+      tempId: tempId,
+      isUploading: isUploading,
+    );
+  }
+
+  bool get isTextMessage => type == MessageType.text;
+  bool get isImageMessage => type == MessageType.image;
+  bool get isFileMessage => type == MessageType.file;
+  bool get isAgreementMessage => type == MessageType.agreement;
+  bool get isSystemMessage => type == MessageType.system || isSystem;
+
+  String? get fileUrl => metadata['file_url'] as String?;
+  String? get fileName => metadata['file_name'] as String?;
+  String? get fileSize => metadata['file_size'] as String?;
+  String? get mimeType => metadata['mime_type'] as String?;
+  String? get agreementId => metadata['agreement_id'] as String?;
+  String? get agreementType => metadata['agreement_type'] as String?;
+  String? get agreementStatus => metadata['agreement_status'] as String?;
+
+  bool get isValid {
+    if (id.isEmpty && tempId == null) return false;
+    if (chatId.isEmpty) return false;
+    if (text.isEmpty && !isImageMessage && !isFileMessage) return false;
+    return true;
+  }
+
+  String get preview {
+    if (isImageMessage) return '🖼️ Imagen';
+    if (isFileMessage) return '📎 $fileName';
+    if (isAgreementMessage) return '🤝 Acuerdo enviado';
+    if (isSystemMessage) return '🔔 $text';
+    if (text.length > 30) return '${text.substring(0, 30)}...';
+    return text;
+  }
+
+  @override
+  List<Object?> get props => [
+    id, chatId, fromId, text, type, metadata, createdAt,
+    read, delivered, readAt, deliveredAt, isSystem, tempId, isUploading
+  ];
+
+  @override
+  String toString() {
+    return 'Message(id: $id, text: $text, tempId: $tempId, isUploading: $isUploading)';
+  }
+}
